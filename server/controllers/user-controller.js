@@ -2,6 +2,56 @@ const auth = require('../auth')
 const User = require('../models/user-model')
 const bcrypt = require('bcryptjs')
 
+loginUser = async (req, res) => {
+    console.log("Checking Login User")
+    try{
+        const{ email, password } = req.body;
+        if(!email, !password){
+            //console.log("Required fields not correct")
+            return res
+                .status(400)
+                .json({ errorMessage: "Please enter all required fields." });
+        }
+        
+        const existingUser = await User.findOne({email: email})
+        // console.log(existingUser)
+        if (!existingUser){
+            //If no email was found 
+            //console.log("ANSFIUONHAOIFNHIOANFIONOIFNOIANF")
+            return res
+                .status(401)
+                .json({ errorMessage: "Account not found or password was wrong"})
+        }
+        const passwordCorrect = await bcrypt
+            .compare(password, existingUser.passwordHash)
+        if (!passwordCorrect){
+            return res
+                .status(401)
+                .json({ errorMessage: "Account not found or password was wrong"})
+        }
+        //Otherwise login the user
+        // LOGIN THE USER
+        const token = auth.signToken(existingUser);
+
+        await res.cookie("token", token, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "none"
+        }).status(200).json({
+            success: true,
+            user: {
+                firstName: existingUser.firstName,
+                lastName: existingUser.lastName,
+                email: existingUser.email
+            }
+        }).send();
+
+    }catch (err) {
+        console.error(err);
+        res.status(500).send();
+    }
+}
+
 getLoggedIn = async (req, res) => {
     auth.verify(req, res, async function () {
         const loggedInUser = await User.findOne({ _id: req.userId });
@@ -16,13 +66,23 @@ getLoggedIn = async (req, res) => {
     })
 }
 
+// logoutUser = async(req, res) => {
+//     try{
+
+//     }catch(err){
+        
+//     }
+// }
 registerUser = async (req, res) => {
+    console.log("TOIASJFIOAJSIOFJIOASFJOIAJSF")
     try {
         const { firstName, lastName, email, password, passwordVerify } = req.body;
         if (!firstName || !lastName || !email || !password || !passwordVerify) {
+            console.log("Not all fields ull")
+            //console.log(res.status())
+            res.status(400).json({ errorMessage: "Please enter all required fields." });
             return res
-                .status(400)
-                .json({ errorMessage: "Please enter all required fields." });
+            
         }
         if (password.length < 8) {
             return res
@@ -80,5 +140,6 @@ registerUser = async (req, res) => {
 
 module.exports = {
     getLoggedIn,
-    registerUser
+    registerUser,
+    loginUser
 }
