@@ -14,12 +14,12 @@ import { GlobalStoreContext } from '../store/index.js'
 
 function WorkspaceScreen() {
     const { store } = useContext(GlobalStoreContext);
-    console.log(store)
+    //console.log(store)
     let location = useLocation();
-    console.log(location.pathname)
+    //console.log(location.pathname)
     
     let idFromUrl = location.pathname.substring(2 + "top5list".length)
-    console.log(idFromUrl)
+    //console.log(idFromUrl)
 
     useEffect(() =>{
         

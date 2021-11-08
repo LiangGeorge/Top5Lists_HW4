@@ -15,6 +15,8 @@ function Top5Item(props) {
     const { store } = useContext(GlobalStoreContext);
     const [editActive, setEditActive] = useState(false);
     const [draggedTo, setDraggedTo] = useState(0);
+    const [text, setText] = useState("");
+    let { index } = props;
 
     function handleDragStart(event, targetId) {
         event.dataTransfer.setData("item", targetId);
@@ -48,47 +50,107 @@ function Top5Item(props) {
         store.addMoveItemTransaction(sourceId, targetId);
     }
 
-    let { index } = props;
+    function handleToggleEdit(event) {
+        event.stopPropagation();
+        toggleEdit();
+    }
+
+    function toggleEdit() {
+        let newActive = !editActive;
+        if (newActive) {
+            store.setIsItemEditActive();
+        }
+        setText(props.text)
+        setEditActive(newActive);
+        
+        
+    }
+
+    function handleKeyPress(event) {
+        if (event.code === "Enter") {
+            store.addUpdateItemTransaction(index,text)
+            toggleEdit();
+        }
+    }
+
+    function handleOnBlur(event){
+        store.addUpdateItemTransaction(index,text)
+        toggleEdit();
+    }
+
+
+    function handleUpdateText(event) {
+        setText(event.target.value);
+    }
+
+    
 
     let itemClass = "top5-item";
     if (draggedTo) {
         itemClass = "top5-item-dragged-to";
     }
 
+    let retItem = undefined
+    if (!editActive){
+        retItem = <ListItem
+        id={'item-' + (index+1)}
+        key={props.key}
+        className={itemClass}
+        onDragStart={(event) => {
+            handleDragStart(event, (index+1))
+        }}
+        onDragOver={(event) => {
+            handleDragOver(event, (index+1))
+        }}
+        onDragEnter={(event) => {
+            handleDragEnter(event, (index+1))
+        }}
+        onDragLeave={(event) => {
+            handleDragLeave(event, (index+1))
+        }}
+        onDrop={(event) => {
+            handleDrop(event, (index+1))
+        }}
+        draggable="true"
+        sx={{ display: 'flex', p: 1 }}
+        style={{
+            fontSize: '48pt',
+            width: '100%'
+        }}
+    >
+    <Box sx={{ p: 1 }}>
+        <IconButton aria-label='edit' 
+            onClick={(event) => {handleToggleEdit(event)}}>
+            <EditIcon style={{fontSize:'48pt'}}  />
+        </IconButton>
+    </Box>
+        <Box sx={{ p: 1, flexGrow: 1 }}>{props.text}</Box>
+    </ListItem>
+    }else{
+        retItem= <Box
+        component="form"
+        sx={{
+          '& > :not(style)': { width: 1 },
+        }}
+        noValidate
+        autoComplete="off"
+        >
+            <TextField 
+            autoFocus
+            required
+            label={'Item' + (index+1)} variant="filled" 
+            inputProps={{style: {fontSize: 48}}}
+            InputLabelProps={{style: {fontSize: 24}}}
+            defaultValue={text}
+            onChange={handleUpdateText}
+            onBlur={handleOnBlur}
+            onKeyPress={handleKeyPress}
+            />
+        </Box>
+
+    }
     return (
-            <ListItem
-                id={'item-' + (index+1)}
-                key={props.key}
-                className={itemClass}
-                onDragStart={(event) => {
-                    handleDragStart(event, (index+1))
-                }}
-                onDragOver={(event) => {
-                    handleDragOver(event, (index+1))
-                }}
-                onDragEnter={(event) => {
-                    handleDragEnter(event, (index+1))
-                }}
-                onDragLeave={(event) => {
-                    handleDragLeave(event, (index+1))
-                }}
-                onDrop={(event) => {
-                    handleDrop(event, (index+1))
-                }}
-                draggable="true"
-                sx={{ display: 'flex', p: 1 }}
-                style={{
-                    fontSize: '48pt',
-                    width: '100%'
-                }}
-            >
-            <Box sx={{ p: 1 }}>
-                <IconButton aria-label='edit'>
-                    <EditIcon style={{fontSize:'48pt'}}  />
-                </IconButton>
-            </Box>
-                <Box sx={{ p: 1, flexGrow: 1 }}>{props.text}</Box>
-            </ListItem>
+        retItem 
     )
 }
 

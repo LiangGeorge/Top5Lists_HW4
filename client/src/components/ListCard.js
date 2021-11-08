@@ -46,6 +46,11 @@ function ListCard(props) {
         store.markListForDeletion(id);
     }
 
+    function handleOnBlur(event){
+        let id = event.target.id.substring("list-".length);
+        store.changeListName(id, text);
+        toggleEdit();
+    }
     function handleKeyPress(event) {
         if (event.code === "Enter") {
             let id = event.target.id.substring("list-".length);
@@ -100,6 +105,7 @@ function ListCard(props) {
                 className='list-card'
                 onKeyPress={handleKeyPress}
                 onChange={handleUpdateText}
+                onBlur={handleOnBlur}
                 defaultValue={idNamePair.name}
                 inputProps={{style: {fontSize: 48}}}
                 InputLabelProps={{style: {fontSize: 24}}}
