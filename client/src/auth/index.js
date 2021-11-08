@@ -96,8 +96,8 @@ function AuthContextProvider(props) {
         //if (auth.user){
         try{
             const response = await api.getLoggedIn();
-            console.log("GET LOGGED IN CALLED AND WORKED")
-            console.log(response)
+            // console.log("GET LOGGED IN CALLED AND WORKED")
+            // console.log(response)
             if (response.status === 200) {
                 //console.log(response)
                 authReducer({
@@ -119,7 +119,7 @@ function AuthContextProvider(props) {
     auth.registerUser = async function(userData, store) {
         try{
             const response = await api.registerUser(userData);
-            console.log("FAIOFOIJAIOFJIOAJ")
+            
             console.log(response)      
             if (response.status === 200) {
                 authReducer({

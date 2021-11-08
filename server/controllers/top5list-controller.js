@@ -107,7 +107,7 @@ deleteTop5List = async (req, res) => {
                 message: 'Top 5 List not found!',
             })
         }
-        console.log(body)
+        
         if (top5List.ownerEmail === userEmail){
         Top5List.findOneAndDelete({ _id: req.params.id }, () => {
             return res.status(200).json({ success: true, data: top5List })

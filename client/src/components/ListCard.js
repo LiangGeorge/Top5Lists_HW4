@@ -37,6 +37,7 @@ function ListCard(props) {
         if (newActive) {
             store.setIsListNameEditActive();
         }
+        setText(idNamePair.name)
         setEditActive(newActive);
     }
 

@@ -165,6 +165,7 @@ function GlobalStoreContextProvider(props) {
     // THIS FUNCTION PROCESSES CHANGING A LIST NAME
     store.changeListName = async function (id, newName) {
         let response = await api.getTop5ListById(id);
+        console.log("LISTNAME CHANGED")
         if (response.data.success) {
             let top5List = response.data.top5List;
             top5List.name = newName;
@@ -187,7 +188,9 @@ function GlobalStoreContextProvider(props) {
                     getListPairs(top5List);
                 }
             }
-            updateList(top5List);
+            await updateList(top5List);
+            history.push("/top5list/" + id);
+            
         }
     }
 
@@ -251,6 +254,7 @@ function GlobalStoreContextProvider(props) {
     // showDeleteListModal, and hideDeleteListModal
     store.markListForDeletion = async function (id) {
         // GET THE LIST
+        console.log("MARKING LIST FOR DELETION")
         let response = await api.getTop5ListById(id);
         if (response.data.success) {
             let top5List = response.data.top5List;
