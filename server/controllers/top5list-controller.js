@@ -62,7 +62,7 @@ updateTop5List = async (req, res) => {
             })
         }
         // console.log(body.ownerEmail)
-        if (top5LList.ownerEmail === userEmail){
+        if (top5List.ownerEmail === userEmail){
             top5List.name = body.name
             top5List.items = body.items
             top5List
