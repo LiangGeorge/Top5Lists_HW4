@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import AuthContext from '../auth';
-import { GlobalStoreContext } from '../store';
+// import { GlobalStoreContext } from '../store';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -14,25 +14,6 @@ import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-
-// export default function LoginScreen() {
-//     const { auth } = useContext(AuthContext);
-//     const { store } = useContext(GlobalStoreContext)
-
-//     // const handleSubmit = (event) => {
-//     //     event.preventDefault();
-//     //     const formData = new FormData(event.currentTarget);
-//     //     auth.registerUser({
-//     //         firstName: formData.get('firstName'),
-//     //         lastName: formData.get('lastName'),
-//     //         email: formData.get('email'),
-//     //         password: formData.get('password'),
-//     //         passwordVerify: formData.get('passwordVerify')
-//     //     }, store);
-//     // };
-//     return;
-
-// }
 
 function Copyright(props) {
     return (
@@ -51,7 +32,7 @@ function Copyright(props) {
   
   export default function LoginScreen() {
     const { auth } = useContext(AuthContext);
-    const { store } = useContext(GlobalStoreContext)
+    // const { store } = useContext(GlobalStoreContext)
     const handleSubmit = (event) => {
       event.preventDefault();
       const data = new FormData(event.currentTarget);

@@ -61,6 +61,7 @@ function AuthContextProvider(props) {
         if (auth.user){
             const response = await api.getLoggedIn();
             console.log("GET LOGGED IN CALLED AND WORKED")
+            console.log(response)
             if (response.status === 200) {
                 //console.log(response)
                 authReducer({

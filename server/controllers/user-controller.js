@@ -3,7 +3,7 @@ const User = require('../models/user-model')
 const bcrypt = require('bcryptjs')
 
 loginUser = async (req, res) => {
-    console.log("Checking Login User")
+    //console.log("Checking Login User")
     try{
         const{ email, password } = req.body;
         if(!email, !password){
@@ -39,6 +39,7 @@ loginUser = async (req, res) => {
             sameSite: "none"
         }).status(200).json({
             success: true,
+            loggedIn: true,
             user: {
                 firstName: existingUser.firstName,
                 lastName: existingUser.lastName,
