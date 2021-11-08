@@ -1,6 +1,7 @@
 const Top5List = require('../models/top5list-model');
-
+const User = require('../models/user-model')
 createTop5List = (req, res) => {
+    
     const body = req.body;
     if (!body) {
         return res.status(400).json({
@@ -42,6 +43,16 @@ updateTop5List = async (req, res) => {
         })
     }
 
+
+    let userObject = await User.findById({ _id: req.userId}, (err) => {
+        if (err){
+            return res.status(400).json({success: false, error: err})
+        }
+    })
+    // console.log(userObject)
+
+    let userEmail = userObject.email
+
     Top5List.findOne({ _id: req.params.id }, (err, top5List) => {
         console.log("top5List found: " + JSON.stringify(top5List));
         if (err) {
@@ -50,30 +61,45 @@ updateTop5List = async (req, res) => {
                 message: 'Top 5 List not found!',
             })
         }
-
-        top5List.name = body.name
-        top5List.items = body.items
-        top5List
-            .save()
-            .then(() => {
-                console.log("SUCCESS!!!");
-                return res.status(200).json({
-                    success: true,
-                    id: top5List._id,
-                    message: 'Top 5 List updated!',
+        // console.log(body.ownerEmail)
+        if (top5LList.ownerEmail === userEmail){
+            top5List.name = body.name
+            top5List.items = body.items
+            top5List
+                .save()
+                .then(() => {
+                    console.log("SUCCESS!!!");
+                    return res.status(200).json({
+                        success: true,
+                        id: top5List._id,
+                        message: 'Top 5 List updated!',
+                    })
                 })
-            })
-            .catch(error => {
-                console.log("FAILURE: " + JSON.stringify(error));
-                return res.status(404).json({
-                    error,
-                    message: 'Top 5 List not updated!',
+                .catch(error => {
+                    console.log("FAILURE: " + JSON.stringify(error));
+                    return res.status(404).json({
+                        error,
+                        message: 'Top 5 List not updated!',
+                    })
                 })
-            })
+        }else{
+            return res.status(401).json({ success: false, error: err });
+        }
+        
     })
 }
 
 deleteTop5List = async (req, res) => {
+
+    let userObject = await User.findById({ _id: req.userId}, (err) => {
+        if (err){
+            return res.status(400).json({success: false, error: err})
+        }
+    })
+    console.log(userObject)
+
+    let userEmail = userObject.email
+
     Top5List.findById({ _id: req.params.id }, (err, top5List) => {
         if (err) {
             return res.status(404).json({
@@ -81,18 +107,37 @@ deleteTop5List = async (req, res) => {
                 message: 'Top 5 List not found!',
             })
         }
+        console.log(body)
+        if (top5List.ownerEmail === userEmail){
         Top5List.findOneAndDelete({ _id: req.params.id }, () => {
             return res.status(200).json({ success: true, data: top5List })
         }).catch(err => console.log(err))
+        }else{
+            return res.status(401).json({ success: false, error: err });
+        }
     })
 }
 
 getTop5ListById = async (req, res) => {
+    
+    let userObject = await User.findById({ _id: req.userId}, (err) => {
+        if (err){
+            return res.status(400).json({success: false, error: err})
+        }
+    })
+    //console.log(userObject)
+
+    let userEmail = userObject.email
+
     await Top5List.findById({ _id: req.params.id }, (err, list) => {
         if (err) {
             return res.status(400).json({ success: false, error: err });
         }
-        return res.status(200).json({ success: true, top5List: list })
+        if (userEmail === list.ownerEmail){
+            return res.status(200).json({ success: true, top5List: list })
+        }else{
+            return res.status(401).json({ success: false, error: err });
+        }
     }).catch(err => console.log(err))
 }
 getTop5Lists = async (req, res) => {

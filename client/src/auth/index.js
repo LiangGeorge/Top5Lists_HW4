@@ -93,7 +93,8 @@ function AuthContextProvider(props) {
     }
     auth.getLoggedIn = async function () {
         // console.log(auth)
-        if (auth.user){
+        //if (auth.user){
+        try{
             const response = await api.getLoggedIn();
             console.log("GET LOGGED IN CALLED AND WORKED")
             console.log(response)
@@ -107,7 +108,11 @@ function AuthContextProvider(props) {
                     }
                 });
             }
-        }   
+        } catch(err){
+            //console.log(err);
+        }
+            
+        //}   
     }
 
     
