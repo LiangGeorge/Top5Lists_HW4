@@ -173,7 +173,16 @@ function AuthContextProvider(props) {
 
     auth.logoutUser = async function(){
         try{
+            console.log("Trying to logout user")
             const response = await api.logoutUser();
+            if (response.status === 200) {
+                authReducer({
+                    type: AuthActionType.LOGOUT_USER,
+                })
+                history.push("/");
+                console.log("Logging Our guy out")
+            }
+            
         }catch(err){
 
         }

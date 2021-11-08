@@ -55,6 +55,7 @@ loginUser = async (req, res) => {
 
 getLoggedIn = async (req, res) => {
     auth.verify(req, res, async function () {
+        //console.log(req)
         const loggedInUser = await User.findOne({ _id: req.userId });
         return res.status(200).json({
             loggedIn: true,
@@ -67,13 +68,16 @@ getLoggedIn = async (req, res) => {
     })
 }
 
-// logoutUser = async(req, res) => {
-//     try{
-
-//     }catch(err){
+logoutUser = async(req, res) => {
+    try{
         
-//     }
-// }
+        await res.cookie("token", "").status(200).json({
+            success: true,
+        }).send()
+    }catch(err){
+        
+    }
+}
 registerUser = async (req, res) => {
     console.log("TOIASJFIOAJSIOFJIOASFJOIAJSF")
     try {
@@ -142,5 +146,6 @@ registerUser = async (req, res) => {
 module.exports = {
     getLoggedIn,
     registerUser,
-    loginUser
+    loginUser,
+    logoutUser
 }
