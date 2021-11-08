@@ -205,6 +205,14 @@ function GlobalStoreContextProvider(props) {
         history.push("/");
     }
 
+    store.closeLogout = function(){
+        storeReducer({
+            type: GlobalStoreActionType.CLOSE_CURRENT_LIST,
+            payload: {}
+        });
+        
+        tps.clearAllTransactions();
+    }
     // THIS FUNCTION CREATES A NEW LIST
     store.createNewList = async function () {
         let newListName = "Untitled" + store.newListCounter;
