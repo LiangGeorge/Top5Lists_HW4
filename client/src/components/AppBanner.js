@@ -80,7 +80,13 @@ export default function AppBanner() {
     }
     
     function getAccountMenu(loggedIn) {
-        return <AccountCircle />;
+        if (!loggedIn){
+            return <AccountCircle />;
+        }
+        console.log(auth.user)
+
+        
+        return auth.user.firstName.substring(0,1) + auth.user.lastName.substring(0,1)
     }
 
     return (

@@ -79,7 +79,8 @@ function Copyright(props) {
                     <Button 
                     onClick={() => auth.hideModal()}
                     sx = {{ 
-                        ml: 15
+                        ml: 15,
+                        mt: 2
                     }}
                     variant="contained">Close</Button>
                     
