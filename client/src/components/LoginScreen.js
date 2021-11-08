@@ -14,7 +14,8 @@ import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-
+import Modal from '@mui/material/Modal';
+import Alert from '@mui/material/Alert';
 function Copyright(props) {
     return (
       <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -46,11 +47,46 @@ function Copyright(props) {
     console.log("COMPLETED")
     
     };
+
+    const style = {
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+      width: 400,
+      bgcolor: 'background.paper',
+      border: '2px solid #000',
+      boxShadow: 24,
+      p: 4,
+    };
   
     return (
       <ThemeProvider theme={theme}>
         <Grid container component="main" sx={{ height: '100vh' }}>
           <CssBaseline />
+
+          <Modal
+                aria-describedby="modal-modal-description"
+                open={auth.showModal}
+                className={"modal " + ((auth.showModal)? "is-visible": "")}
+                >
+                    
+                <Box sx = {style}>
+                    <Alert severity="warning">An error has occurred!</Alert>
+                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                    {auth.modalMSG}
+                    </Typography>
+                    <Button 
+                    onClick={() => auth.hideModal()}
+                    sx = {{ 
+                        ml: 15
+                    }}
+                    variant="contained">Close</Button>
+                    
+                </Box>
+          </Modal>
+
+
           <Grid
             item
             xs={false}

@@ -275,7 +275,7 @@ input {
   padding: 1rem;
   background: var(--black);
   color: var(--swatch-text);
-  cursor: pointer;
+  /* cursor: pointer; */
   visibility: hidden;
   opacity: 0;
   transition: all 0.35s ease-in;

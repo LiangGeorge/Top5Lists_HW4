@@ -11,12 +11,16 @@ export const AuthActionType = {
     REGISTER_USER: "REGISTER_USER",
     SET_LOGGED_IN: "SET_LOGGED_IN",
     LOGOUT_USER: "LOGOUT_USER",
+    SHOW_MODAL: "SHOW_MODAL",
+    HIDE_MODAL: "HIDE_MODAL",
 }
 
 function AuthContextProvider(props) {
     const [auth, setAuth] = useState({
         user: null,
-        loggedIn: false
+        loggedIn: false,
+        showModal: false,
+        modalMSG: null,
     });
     const history = useHistory();
 
@@ -30,25 +34,50 @@ function AuthContextProvider(props) {
             case AuthActionType.GET_LOGGED_IN: {
                 return setAuth({
                     user: payload.user,
-                    loggedIn: payload.loggedIn
+                    loggedIn: payload.loggedIn,
+                    showModal: false,
+                    modalMSG: null,
                 });
             }
             case AuthActionType.REGISTER_USER: {
                 return setAuth({
                     user: payload.user,
-                    loggedIn: true
+                    loggedIn: true,
+                    showModal: false,
+                    modalMSG: null,
                 })
             }
             case AuthActionType.SET_LOGGED_IN: {
                 return setAuth({
                     user: payload.user,
-                    loggedIn: payload.loggedIn
+                    loggedIn: payload.loggedIn,
+                    showModal: false,
+                    modalMSG: null,
                 })
             }
             case AuthActionType.LOGOUT_USER: {
                 return setAuth({
                 user: null,
-                loggedIn: false
+                loggedIn: false,
+                showModal: false,
+                modalMSG: null,
+                })
+            }
+            case AuthActionType.SHOW_MODAL: {
+                return setAuth({
+                    user: null,
+                    loggedIn: false,
+                    showModal: true,
+                    modalMSG: payload.modalMSG,
+
+                })
+            }
+            case AuthActionType.HIDE_MODAL: {
+                return setAuth({
+                    user: null,
+                    loggedIn: false,
+                    showModal: false,
+                    modalMSG: null,
                 })
             }
             default:
@@ -56,6 +85,12 @@ function AuthContextProvider(props) {
         }
     }
 
+    auth.hideModal = async function (){
+        console.log("HidingModal")
+        authReducer({
+            type: AuthActionType.HIDE_MODAL,
+        });
+    }
     auth.getLoggedIn = async function () {
         // console.log(auth)
         if (auth.user){
@@ -75,6 +110,7 @@ function AuthContextProvider(props) {
         }   
     }
 
+    
     auth.registerUser = async function(userData, store) {
         try{
             const response = await api.registerUser(userData);
@@ -94,6 +130,12 @@ function AuthContextProvider(props) {
             }
         }catch(err){
             console.log(err.response)
+            authReducer({
+                type: AuthActionType.SHOW_MODAL,
+                payload:{
+                    modalMSG: err.response.data.errorMessage
+                }
+            })
             //return(err.response.data)
             // console.log("ERRORROEOROEROE")
             // console.log(response)
@@ -118,7 +160,13 @@ function AuthContextProvider(props) {
                 
             }
         }catch(err){
-            console.log(err.response)
+            console.log(err.response);
+            authReducer({
+                type: AuthActionType.SHOW_MODAL,
+                payload:{
+                    modalMSG: err.response.data.errorMessage
+                }
+            })
         }
         
     }
