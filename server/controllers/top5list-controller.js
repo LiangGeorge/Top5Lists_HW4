@@ -8,7 +8,7 @@ createTop5List = (req, res) => {
             error: 'You must provide a Top 5 List',
         })
     }
-
+    console.log(body)
     const top5List = new Top5List(body);
     console.log("creating top5List: " + JSON.stringify(top5List));
     if (!top5List) {
@@ -109,7 +109,9 @@ getTop5Lists = async (req, res) => {
     }).catch(err => console.log(err))
 }
 getTop5ListPairs = async (req, res) => {
-    await Top5List.find({ }, (err, top5Lists) => {
+    console.log("Retrieving top5list pairs")
+    console.log(req.params.email)
+    await Top5List.find({ ownerEmail: req.params.email}, (err, top5Lists) => {
         if (err) {
             return res.status(400).json({ success: false, error: err })
         }
